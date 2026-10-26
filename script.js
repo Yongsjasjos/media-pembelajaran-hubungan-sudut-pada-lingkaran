@@ -1,10 +1,10 @@
-// Interaksi slide, animasi geometri, dan navigasi
-let currentSlide = 1;
-    const totalSlides = 14;
+    let currentSlide = 1;
+    const slideElements = Array.from(document.querySelectorAll(".deck-container > .slide"));
+    const totalSlides = slideElements.length;
 
     function showSlide(n) {
       currentSlide = Math.max(1, Math.min(totalSlides, n));
-      const target = document.getElementById(`slide-${currentSlide}`);
+      const target = slideElements[currentSlide - 1];
       if(target) document.querySelector('.deck-container').scrollTo({top: target.offsetTop, behavior: 'smooth'});
       document.getElementById('slide-num').innerText = `Slide ${currentSlide} / ${totalSlides}`;
     }
@@ -14,7 +14,7 @@ let currentSlide = 1;
     const slideObserver = new IntersectionObserver((entries) => {
       const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0];
       if (visible && visible.intersectionRatio >= 0.55) {
-        currentSlide = Number(visible.target.id.replace('slide-', ''));
+        currentSlide = slideElements.indexOf(visible.target) + 1;
         document.getElementById('slide-num').innerText = `Slide ${currentSlide} / ${totalSlides}`;
         document.querySelectorAll('.slide').forEach(s => s.classList.toggle('active', s === visible.target));
         if (visible.target.id === 'slide-10' || visible.target.id === 'slide-11') { visible.target.querySelectorAll('svg').forEach(svg => { svg.style.animation='none'; void svg.offsetWidth; svg.style.animation=''; }); }
@@ -243,22 +243,8 @@ let currentSlide = 1;
       current = Math.min(current + 1, steps.length);
       wrap.dataset.step = String(current);
       steps.forEach((el, i) => { if (i < current) el.classList.add('revealed'); });
-      const svg = card.querySelector('.example-svg');
-      if (svg) {
-        const parts = Array.from(svg.children);
-        const thresholds = [1, 4, 7, parts.length];
-        const count = thresholds[Math.min(current, thresholds.length - 1)];
-        parts.forEach((part, i) => {
-          if (i < count) {
-            part.style.opacity = '1';
-            if (i > 0 && !part.dataset.animated) {
-              part.dataset.animated = '1';
-              part.style.transformBox = 'fill-box'; part.style.transformOrigin = 'center';
-              part.animate?.([{opacity:0, transform:'scale(.96)'},{opacity:1,transform:'scale(1)'}], {duration:420, easing:'ease-out', fill:'forwards'});
-            }
-          }
-        });
-      }
+      // Diagram dan semua label tetap utuh sejak awal; animasi hanya pada langkah penyelesaian.
+      wrap.classList.remove('is-hidden');
       button.textContent = current >= steps.length ? '✓ Pembahasan lengkap' : `Lanjut langkah ${current + 1} ▶`;
       if (current >= steps.length) button.disabled = true;
     }
@@ -327,7 +313,13 @@ let currentSlide = 1;
       };
       const circle = children[0];
       if (circle) { circle.style.display=''; circle.style.opacity='1'; }
+      const arcLegend = document.getElementById('arc-legend-7');
+      const arcFormula = document.getElementById('arc-formula-7');
+      if (arcLegend) arcLegend.style.display = step >= 0.5 ? 'flex' : 'none';
+      if (arcFormula) arcFormula.style.display = step >= 0.5 ? 'block' : 'none';
       if (step >= 0.5) {
+        reveal(document.getElementById('arc-far-7'), true);
+        reveal(document.getElementById('arc-near-7'), true);
         const baseObjects = children.filter((el,i) => i>0 && (
           (el.tagName.toLowerCase()==='line' && (n===5 ? el.id!=='line-diam-5' : n===6 ? el.id!=='line-ad-6' : el.id!=='line-bc-7')) ||
           el.tagName.toLowerCase()==='text' || (el.tagName.toLowerCase()==='circle' && i!==0)
@@ -353,142 +345,12 @@ let currentSlide = 1;
       svg.dataset.proofStep = String(step);
     }
 
-    // Interactive Proof Step Controllers
-    function setProofStep5(step) {
-      showProofDiagram(5, step);
-      const btns = document.querySelectorAll('#slide-5 .step-btn');
-      btns.forEach(b => b.classList.toggle('active', b.getAttribute('onclick').includes(`(${step})`)));
-      const cards = document.querySelectorAll('#slide-5 .proof-card');
-      cards.forEach(c => {
-        let active = false;
-        if (step === 0) active = c.id.endsWith('-0');
-        else if (step === 0.5) active = c.id.endsWith('-0') || c.id.endsWith('-base');
-        else {
-          const m = c.id.match(/-(\d+)$/);
-          active = c.id.endsWith('-base') || (m && Number(m[1]) <= step);
-        }
-        c.classList.toggle('active', !!active);
-        let cardStep = null;
-        if (c.id.endsWith('-0')) cardStep = 0;
-        else if (c.id.endsWith('-base')) cardStep = 0.5;
-        else {
-          const match = c.id.match(/-(\d+)$/);
-          if (match) cardStep = Number(match[1]);
-        }
-        c.classList.toggle('future', cardStep !== null && cardStep > step);
-      });
-      const line = document.getElementById('line-diam-5');
-      if (line) line.classList.toggle('active', step >= 1);
-      const shape = document.getElementById('tri-aoc-5'); if (shape) shape.classList.toggle('active', step >= 2);
+    // Pengendali pembuktian: diagram dan teks memakai indeks slide yang sama.
+    function updateProofCards(n, step) {
+      const slide=document.querySelector(`#slide-${n}`); if(!slide)return;
+      slide.querySelectorAll('.step-btn').forEach(b=>{const m=b.getAttribute('onclick')?.match(/\(([^)]+)\)/);b.classList.toggle('active',!!m&&Number(m[1])===Number(step));});
+      slide.querySelectorAll('.proof-card').forEach(c=>{let k=c.id.endsWith('-0')?0:c.id.endsWith('-base')?0.5:null;const m=c.id.match(/-(\d+)$/);if(m)k=Number(m[1]);const active=k!==null&&(k===0?step===0:k===0.5?step>=0.5:k<=step);c.classList.toggle('active',active);c.classList.toggle('future',k!==null&&k>step);});
     }
-
-    function setProofStep6(step) {
-      showProofDiagram(6, step);
-      const btns = document.querySelectorAll('#slide-6 .step-btn');
-      btns.forEach(b => b.classList.toggle('active', b.getAttribute('onclick').includes(`(${step})`)));
-      const cards = document.querySelectorAll('#slide-6 .proof-card');
-      cards.forEach(c => {
-        let active = false;
-        if (step === 0) active = c.id.endsWith('-0');
-        else if (step === 0.5) active = c.id.endsWith('-0') || c.id.endsWith('-base');
-        else {
-          const m = c.id.match(/-(\d+)$/);
-          active = c.id.endsWith('-base') || (m && Number(m[1]) <= step);
-        }
-        c.classList.toggle('active', !!active);
-        let cardStep = null;
-        if (c.id.endsWith('-0')) cardStep = 0;
-        else if (c.id.endsWith('-base')) cardStep = 0.5;
-        else {
-          const match = c.id.match(/-(\d+)$/);
-          if (match) cardStep = Number(match[1]);
-        }
-        c.classList.toggle('future', cardStep !== null && cardStep > step);
-      });
-      const line = document.getElementById('line-ad-6');
-      if (line) line.classList.toggle('active', step >= 1);
-      const shape = document.getElementById('tri-ade-6'); if (shape) shape.classList.toggle('active', step >= 2);
-    }
-
-    function setProofStep7(step) {
-      showProofDiagram(7, step);
-      const btns = document.querySelectorAll('#slide-7 .step-btn');
-      btns.forEach(b => b.classList.toggle('active', b.getAttribute('onclick').includes(`(${step})`)));
-      const cards = document.querySelectorAll('#slide-7 .proof-card');
-      cards.forEach(c => {
-        let active = false;
-        if (step === 0) active = c.id.endsWith('-0');
-        else if (step === 0.5) active = c.id.endsWith('-0') || c.id.endsWith('-base');
-        else {
-          const m = c.id.match(/-(\d+)$/);
-          active = c.id.endsWith('-base') || (m && Number(m[1]) <= step);
-        }
-        c.classList.toggle('active', !!active);
-        let cardStep = null;
-        if (c.id.endsWith('-0')) cardStep = 0;
-        else if (c.id.endsWith('-base')) cardStep = 0.5;
-        else {
-          const match = c.id.match(/-(\d+)$/);
-          if (match) cardStep = Number(match[1]);
-        }
-        c.classList.toggle('future', cardStep !== null && cardStep > step);
-      });
-      const line = document.getElementById('line-bc-7');
-      if (line) line.classList.toggle('active', step >= 1);
-      
-    }
-
-    // Render equation berbasis LaTeX pada seluruh materi setelah DOM siap.
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.renderMathInElement) {
-        renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
-      }
-    });
-
-    // Pena dan penghapus untuk mencoret langsung di atas slide.
-    (() => {
-      const canvas = document.getElementById('drawing-layer');
-      const ctx = canvas.getContext('2d');
-      const pen = document.getElementById('pen-tool');
-      const eraser = document.getElementById('eraser-tool');
-      const clear = document.getElementById('clear-tool');
-      let mode = null, drawing = false;
-      function resizeCanvas() {
-        const old = document.createElement('canvas'); old.width = canvas.width; old.height = canvas.height;
-        old.getContext('2d').drawImage(canvas, 0, 0);
-        canvas.width = window.innerWidth * devicePixelRatio;
-        canvas.height = window.innerHeight * devicePixelRatio;
-        canvas.style.width = window.innerWidth + 'px'; canvas.style.height = window.innerHeight + 'px';
-        ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-        if (old.width && old.height) ctx.drawImage(old,0,0,old.width,old.height,0,0,window.innerWidth,window.innerHeight);
-        ctx.lineCap='round'; ctx.lineJoin='round';
-      }
-      resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-      function setMode(next) {
-        mode = mode === next ? null : next;
-        canvas.classList.toggle('enabled', !!mode);
-        pen.classList.toggle('active', mode === 'pen'); eraser.classList.toggle('active', mode === 'eraser');
-        canvas.style.cursor = mode === 'eraser' ? 'cell' : 'crosshair';
-      }
-      pen.addEventListener('click', () => setMode('pen'));
-      eraser.addEventListener('click', () => setMode('eraser'));
-      clear.addEventListener('click', () => ctx.clearRect(0,0,window.innerWidth,window.innerHeight));
-      canvas.addEventListener('pointerdown', e => { if (!mode) return; drawing=true; canvas.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.moveTo(e.clientX,e.clientY); });
-      canvas.addEventListener('pointermove', e => { if (!drawing || !mode) return; ctx.globalCompositeOperation = mode === 'eraser' ? 'destination-out' : 'source-over'; ctx.strokeStyle='#EF4444'; ctx.lineWidth=mode === 'eraser' ? 24 : 3; ctx.lineTo(e.clientX,e.clientY); ctx.stroke(); });
-      const stop = () => { drawing=false; ctx.closePath(); ctx.globalCompositeOperation='source-over'; };
-      canvas.addEventListener('pointerup',stop); canvas.addEventListener('pointercancel',stop);
-    })();
-
-    // Awal slide 5–7: lingkaran polos, agar murid membuat dugaan sebelum konstruksi ditampilkan.
-    document.addEventListener('DOMContentLoaded', () => {
-      prepareProofDiagrams();
-      [5,6,7].forEach(n => {
-        document.querySelectorAll(`#slide-${n} .proof-card`).forEach(card => {
-          card.classList.toggle('active', card.id.endsWith('-0'));
-          card.classList.remove('future');
-        });
-        document.querySelectorAll(`#slide-${n} .step-btn`).forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('onclick')?.includes(`(${0})`));
-        });
-      });
-    });
+    function setProofStep5(step){showProofDiagram(5,step);updateProofCards(5,step);const l=document.getElementById('line-diam-5');if(l)l.classList.toggle('active',step>=1);const t=document.getElementById('tri-aoc-5');if(t)t.classList.toggle('active',step>=2);}
+    function setProofStep6(step){showProofDiagram(6,step);updateProofCards(6,step);const l=document.getElementById('line-ad-6');if(l)l.classList.toggle('active',step>=1);const t=document.getElementById('tri-ade-6');if(t)t.classList.toggle('active',step>=2);}
+    function setProofStep7(step){showProofDiagram(7,step);updateProofCards(7,step);const l=document.getElementById('line-bc-7');if(l)l.classList.toggle('active',step>=1);}
