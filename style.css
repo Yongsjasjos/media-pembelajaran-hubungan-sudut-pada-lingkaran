@@ -28,7 +28,7 @@ body {
   overflow: hidden;
 }
 
-/* Presentation Container (Full Screen Vertical Scroll) */
+/* Container utama slide */
 .deck-container {
   width: 100vw;
   max-width: none;
@@ -45,7 +45,7 @@ body {
   overscroll-behavior-y: contain;
 }
 
-/* Slides Management */
+/* Pengaturan Slide */
 .slide {
   display: flex;
   flex: 0 0 100vh;
@@ -74,7 +74,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Header Bar */
+/* Header Slide */
 .slide-header {
   background: var(--navy-header);
   color: white;
@@ -89,10 +89,10 @@ body {
 .slide-header h2 { font-size: 1.25rem; font-weight: 700; color: #F8FAFC; }
 .slide-header .tag { background: var(--primary-blue); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
 
-/* Layout Split */
+/* Grid Tata Letak 2 Kolom */
 .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; height: 100%; align-items: center; }
 
-/* Interactive Geometry Panel */
+/* Panel Geometri SVG */
 .geo-panel {
   background: #F1F5F9;
   border-radius: 12px;
@@ -108,7 +108,7 @@ body {
 .geo-svg { width: 100%; max-height: min(42vh, 420px); overflow: visible; }
 svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint-order: stroke; stroke: #FFFFFF; stroke-width: 2px; stroke-linejoin: round; }
 
-/* SVG Animated Lines & Accents */
+/* Animasi Garis & Bentuk Geometri */
 .draw-line {
   stroke-dasharray: 400;
   stroke-dashoffset: 400;
@@ -124,7 +124,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
 }
 .highlight-shape.active { opacity: 1; }
 
-/* Proof Steps Panel */
+/* Panel Langkah Pembuktian */
 .proof-panel { display: flex; flex-direction: column; gap: 8px; }
 .step-btn-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
 .step-btn {
@@ -166,7 +166,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
 }
 .proof-card strong { color: var(--navy); }
 
-/* Math Formulas & Accents */
+/* Format Rumus Matematika */
 .math-formula {
   font-family: 'JetBrains Mono', monospace;
   background: #FEF2F2;
@@ -178,7 +178,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
   display: inline-block;
 }
 
-/* Unsur Lingkaran Interaktif (Slide 3) */
+/* Unsur Lingkaran (Slide 3) */
 .element-menu-wrap { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .reveal-menu-btn { display: flex; justify-content: space-between; align-items: center; gap: 12px; text-align: left; border: 0; border-radius: 12px; background: #1E293B; color: white; padding: 16px 18px; font: 700 1rem 'Plus Jakarta Sans', sans-serif; cursor: pointer; box-shadow: 0 5px 16px #0f172a18; }
 .reveal-menu-btn span { font-size: 1.5rem; color: #93C5FD; }
@@ -201,7 +201,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
 #slide-4 .angle-definition:not([hidden]) { display: block; }
 .angle-definition { font-size: .82rem; line-height: 1.45; text-align: left; background: #EFF6FF; border-radius: 8px; padding: 10px; color: #334155; }
 
-/* Contoh Soal (Slide 8) */
+/* Kartu Soal Pembahasan (Slide 8) */
 .example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: stretch; }
 .example-card { background: #F8FAFC; border: 1px solid #DCE5F0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .example-card h4 { color: var(--navy); font-size: 1.02rem; margin: 0; }
@@ -216,7 +216,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
 .example-next { align-self: flex-start; margin-top: 3px; }
 #slide-8 .example-svg > * { opacity: 1 !important; transition: none !important; animation: none !important; }
 
-/* Tebak Gambar / Quiz (Slide 10 & 11) */
+/* Kuis & Tantangan (Slide 10 & 11) */
 .quiz-visual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; }
 .quiz-visual-card { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
 .quiz-svg { width: 100%; max-height: 34vh; min-height: 170px; }
@@ -227,7 +227,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
 #slide-10 .geo-panel svg > *, #slide-11 .quiz-svg > * { transform-box: fill-box; transform-origin: center; animation: quizDraw .65s ease-out both; }
 @keyframes quizDraw { from { opacity: .12; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
 
-/* Penugasan / Realtime Spreadsheet (Slide 13) */
+/* Penugasan Realtime (Slide 13) */
 .task-container { display: flex; flex-direction: column; gap: 14px; height: 100%; }
 .top-task-bar { display: flex; gap: 16px; align-items: center; background: #EFF6FF; padding: 12px 16px; border-radius: 12px; border: 1px solid #BFDBFE; }
 .qr-box { width: 100px; height: 100px; background: white; padding: 6px; border-radius: 8px; border: 1px solid #93C5FD; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); flex-shrink: 0; display: flex; justify-content: center; align-items: center; }
@@ -238,7 +238,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
 .sheet-wrapper { flex-grow: 1; width: 100%; min-height: 250px; border-radius: 10px; overflow: hidden; border: 2px solid var(--primary-blue); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 .sheet-wrapper iframe { width: 100%; height: 100%; border: none; }
 
-/* Deck Footer & Navigation */
+/* Footer Navigasi Presentasi */
 .deck-footer {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -289,10 +289,10 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
 #fullscreen-btn { position: fixed !important; right: 74px !important; bottom: 40px !important; z-index: 9999 !important; font-size: .8rem; }
 
 /* =========================================================
-   PENA, PENGHAPUS, DAN HAPUS CORETAN (REVISI PERBAIKAN Z-INDEX)
+   PENA, PENGHAPUS, DAN TOOLBAR CORETAN
    ========================================================= */
 
-/* Canvas berada di bawah toolbar namun di atas slide */
+/* Lapisan Canvas Coretan */
 #drawing-layer { 
   position: fixed; 
   inset: 0; 
@@ -308,7 +308,7 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
   cursor: crosshair; 
 }
 
-/* Toolbar coretan memiliki Z-Index tinggi agar selalu berada paling depan */
+/* Panel Tombol Coretan (Diset Z-Index tinggi) */
 .draw-toolbar { 
   position: fixed; 
   left: 12px; 
@@ -349,18 +349,85 @@ svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint
   outline: 2px solid #60A5FA; 
 }
 
-/* Response Layar Kecil / HP */
+/* =========================================================
+   PENGATURAN RESPONSIF UNTUK LAYAR PONSEL / HP (< 760px)
+   ========================================================= */
 @media (max-width: 760px) {
   body { overflow: hidden; }
   .deck-container { height: 100dvh; }
-  .slide { height: 100dvh; min-height: 100dvh; padding-bottom: 68px; }
-  .split-grid, .example-grid, .angle-grid, .quiz-visual-grid { grid-template-columns: 1fr; gap: 12px; }
-  .slide-header h2 { font-size: 1rem; }
-  .deck-footer { padding: 0 8px; font-size: .68rem; height: 30px; }
-  #prev-btn { left: 8px !important; } 
-  #next-btn { right: 8px !important; }
-  #fullscreen-btn { right: 62px !important; }
-  .nav-btn { padding: 4px 7px; font-size: 1rem; }
+
+  .slide { 
+    height: auto !important; 
+    min-height: 100dvh; 
+    padding: 16px 14px 80px 14px !important; 
+    overflow-y: visible;
+  }
+
+  .slide-header {
+    margin: -16px -14px 14px -14px !important;
+    padding: 10px 14px !important;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .slide-header h2 { 
+    font-size: 1rem !important; 
+    line-height: 1.3;
+  }
+
+  .split-grid, 
+  .example-grid, 
+  .angle-grid, 
+  .quiz-visual-grid { 
+    grid-template-columns: 1fr !important; 
+    gap: 14px !important; 
+  }
+
+  .geo-panel {
+    padding: 10px !important;
+  }
+  
+  .geo-svg { 
+    max-height: 260px !important; 
+  }
+
+  .quiz-svg { 
+    max-height: 180px !important; 
+    min-height: 140px !important; 
+  }
+
+  /* Toolbar coretan dipindah ke bagian bawah tengah pada layar HP */
+  .draw-toolbar {
+    top: auto !important;
+    bottom: 45px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    flex-direction: row !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    gap: 12px !important;
+  }
+
+  .draw-tool {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 18px !important;
+  }
+
+  .deck-footer {
+    height: 36px !important;
+    padding: 0 10px !important;
+    font-size: 0.68rem !important;
+  }
+
+  #prev-btn, #next-btn {
+    bottom: 48px !important;
+  }
+  
+  #prev-btn { left: 10px !important; }
+  #next-btn { right: 10px !important; }
+  #fullscreen-btn { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
