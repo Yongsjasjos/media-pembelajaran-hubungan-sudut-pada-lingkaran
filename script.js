@@ -15,7 +15,7 @@ function showSlide(n) {
     `Slide ${currentSlide} / ${totalSlides}`;
 }
 
-// Pantau slide yang aktif.
+// Pantau slide yang aktif
 const deck = document.querySelector(".deck-container");
 
 const slideObserver = new IntersectionObserver((entries) => {
@@ -770,7 +770,7 @@ function setProofStep7(step) {
 }
 
 /* =========================================================
-   FITUR PENA, PENGHAPUS, DAN HAPUS SEMUA CORETAN
+   FITUR PENA, PENGHAPUS, DAN HAPUS SEMUA CORETAN (REVISI)
    ========================================================= */
 
 function initDrawingTools() {
@@ -795,6 +795,10 @@ function initDrawingTools() {
   let lastY = 0;
 
   function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
     const saved = document.createElement("canvas");
     saved.width = canvas.width;
     saved.height = canvas.height;
@@ -803,28 +807,19 @@ function initDrawingTools() {
       saved.getContext("2d").drawImage(canvas, 0, 0);
     }
 
-    const dpr = window.devicePixelRatio || 1;
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
 
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.scale(dpr, dpr);
 
     if (saved.width && saved.height) {
-      ctx.drawImage(
-        saved,
-        0, 0, saved.width, saved.height,
-        0, 0, width, height
-      );
+      ctx.drawImage(saved, 0, 0, saved.width / dpr, saved.height / dpr);
     }
 
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    ctx.globalCompositeOperation = "source-over";
   }
 
   function setMode(nextMode) {
@@ -834,15 +829,17 @@ function initDrawingTools() {
     pen.classList.toggle("active", mode === "pen");
     eraser.classList.toggle("active", mode === "eraser");
 
-    canvas.style.cursor =
-      mode === "pen" ? "crosshair" :
-      mode === "eraser" ? "cell" :
-      "default";
+    if (mode === "eraser") {
+      canvas.style.cursor = "cell";
+    } else if (mode === "pen") {
+      canvas.style.cursor = "crosshair";
+    } else {
+      canvas.style.cursor = "default";
+    }
   }
 
   function getPosition(event) {
     const rect = canvas.getBoundingClientRect();
-
     return {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top
@@ -852,20 +849,12 @@ function initDrawingTools() {
   function startDrawing(event) {
     if (!mode || event.button !== 0) return;
 
-    event.preventDefault();
     drawing = true;
-
-    try {
-      canvas.setPointerCapture(event.pointerId);
-    } catch (_) {}
-
     const pos = getPosition(event);
     lastX = pos.x;
     lastY = pos.y;
 
-    ctx.globalCompositeOperation =
-      mode === "eraser" ? "destination-out" : "source-over";
-
+    ctx.globalCompositeOperation = mode === "eraser" ? "destination-out" : "source-over";
     ctx.strokeStyle = "#EF4444";
     ctx.lineWidth = mode === "eraser" ? 24 : 3;
 
@@ -878,13 +867,9 @@ function initDrawingTools() {
   function draw(event) {
     if (!drawing || !mode) return;
 
-    event.preventDefault();
-
     const pos = getPosition(event);
 
-    ctx.globalCompositeOperation =
-      mode === "eraser" ? "destination-out" : "source-over";
-
+    ctx.globalCompositeOperation = mode === "eraser" ? "destination-out" : "source-over";
     ctx.strokeStyle = "#EF4444";
     ctx.lineWidth = mode === "eraser" ? 24 : 3;
 
@@ -899,30 +884,36 @@ function initDrawingTools() {
 
   function stopDrawing() {
     drawing = false;
-    ctx.globalCompositeOperation = "source-over";
     ctx.beginPath();
   }
 
-  pen.addEventListener("click", () => setMode("pen"));
-  eraser.addEventListener("click", () => setMode("eraser"));
+  // Event listener tombol alat coretan (dikunci dengan stopPropagation)
+  pen.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setMode("pen");
+  });
 
-  clear.addEventListener("click", () => {
+  eraser.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setMode("eraser");
+  });
+
+  clear.addEventListener("click", (e) => {
+    e.stopPropagation();
     stopDrawing();
-
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
   });
 
+  // Event pointer untuk menggambar di canvas
   canvas.addEventListener("pointerdown", startDrawing);
   canvas.addEventListener("pointermove", draw);
   canvas.addEventListener("pointerup", stopDrawing);
   canvas.addEventListener("pointercancel", stopDrawing);
-  canvas.addEventListener("lostpointercapture", stopDrawing);
 
   window.addEventListener("resize", resizeCanvas);
-
   resizeCanvas();
 }
 
