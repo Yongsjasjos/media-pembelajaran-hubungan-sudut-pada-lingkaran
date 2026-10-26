@@ -9,16 +9,6 @@ Proyek media pembelajaran Matematika kelas XI yang membahas hubungan sudut pada 
 - **SVG**: visualisasi geometri yang disisipkan pada HTML.
 - **KaTeX**: perender notasi matematika, dimuat dari CDN.
 
-## Menjalankan secara lokal
-Buka `index.html` di browser modern. Koneksi internet dibutuhkan untuk memuat KaTeX dari CDN.
-
-## Publikasi dengan GitHub Pages
-1. Buat repository GitHub baru.
-2. Unggah `index.html`, `style.css`, dan `script.js` ke root repository.
-3. Buka **Settings → Pages**.
-4. Pada **Build and deployment**, pilih **Deploy from a branch**, lalu pilih branch `main` dan folder `/ (root)`.
-5. Simpan dan tunggu tautan GitHub Pages tersedia.
-
 ## Struktur proyek
 ```text
 Portofolio_Lingkaran_GitHub/
@@ -27,3 +17,6 @@ Portofolio_Lingkaran_GitHub/
 ├── script.js
 └── README.md
 ```
+
+## Hasil Produk
+https://yongsjasjos.github.io/media-pembelajaran-hubungan-sudut-pada-lingkaran/
