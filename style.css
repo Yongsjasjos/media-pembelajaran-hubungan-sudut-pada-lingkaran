@@ -1,4 +1,3 @@
-/* Gaya visual media pembelajaran lingkaran */
 :root {
       --navy: #0F172A;
       --navy-header: #1E293B;
@@ -378,8 +377,8 @@
     .worked-steps p[data-workstep] {opacity:.12;filter:grayscale(.4);transition:opacity .3s,filter .3s,transform .3s}
     .worked-steps p[data-workstep].revealed {opacity:1;filter:none;transform:translateX(3px)}
     .example-next {align-self:flex-start;margin-top:3px}
-    .example-svg > * {opacity:0;transition:opacity .35s ease}
-    .example-svg > *:first-child {opacity:1}
+    /* Diagram contoh soal selalu tampil lengkap; animasi hanya pada langkah pembahasan. */
+    #slide-8 .example-svg > * {opacity:1 !important; transition:none !important; animation:none !important}
     #slide-10 .geo-panel svg > *, #slide-11 .quiz-svg > * {transform-box:fill-box;transform-origin:center;animation:quizDraw .65s ease-out both}
     #slide-10 .geo-panel svg > *:nth-child(1), #slide-11 .quiz-svg > *:nth-child(1) {animation-delay:.05s}
     #slide-10 .geo-panel svg > *:nth-child(2), #slide-11 .quiz-svg > *:nth-child(2) {animation-delay:.2s}
