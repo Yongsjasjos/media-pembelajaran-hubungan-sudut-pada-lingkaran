@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hubungan Sudut pada Lingkaran - Matematika Kelas XI.3</title>
+  
+  <!-- KaTeX for LaTeX Math Formatting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="deck-container">
+
+    <!-- SLIDE 1: SAMPUL -->
+    <div class="slide active" id="slide-1" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color: white; justify-content: center; align-items: center; text-align: center;">
+      <div style="max-width: 650px;">
+        <span style="background: rgba(37,99,235,0.3); color: #60A5FA; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">MATEMATIKA KELAS XI.3</span>
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin: 16px 0 10px 0; color: #F8FAFC;">Hubungan Sudut pada Lingkaran</h1>
+        <p style="color: #94A3B8; font-size: 1.05rem; margin-bottom: 24px;">Pembuktian Aksional & Visualisasi Geometri Interaktif</p>
+        <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.08); padding: 8px 18px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15);">
+          <span style="color: #38BDF8; font-weight: 600;">Guru Praktikan:</span>
+          <span style="font-weight: 700; color: white;">Yoga Pratama</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: AYAT AL-QUR'AN -->
+    <div class="slide" id="slide-2">
+      <div class="slide-header">
+        <h2>Pola & Keteraturan Alam</h2>
+        <span class="tag">Integrasi Nilai</span>
+      </div>
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 0 20px;">
+        <div lang="ar" dir="rtl" style="font-family:'Noto Naskh Arabic',serif;font-size:clamp(1.45rem,2.3vw,2.15rem);line-height:1.9;color:#0F172A;max-width:1000px;margin:0 auto 14px;">
+          هُوَ الَّذِي جَعَلَ الشَّمْسَ ضِيَاءً وَالْقَمَرَ نُورًا وَقَدَّرَهُ مَنَازِلَ لِتَعْلَمُوا عَدَدَ السِّنِينَ وَالْحِسَابَ ۚ مَا خَلَقَ اللَّهُ ذَٰلِكَ إِلَّا بِالْحَقِّ ۚ يُفَصِّلُ الْآيَاتِ لِقَوْمٍ يَعْلَمُونَ
+        </div>
+        <h3 style="font-size: 1.5rem; font-family: 'Noto Naskh Arabic', 'Amiri', serif; color: var(--navy); margin-bottom: 12px;">QS. Yunus Ayat 5</h3>
+        <p style="font-size: 1.1rem; font-style: italic; color: #334155; max-width: 800px; line-height: 1.6; margin-bottom: 16px;">
+          "Dialah yang menjadikan matahari bersinar dan bulan bercahaya, dan Dialah yang menetapkan tempat-tempat orbit bagi bulan itu, agar kamu mengetahui bilangan tahun dan perhitungan (waktu). Allah tidak menciptakan demikian itu melainkan dengan hak."
+        </p>
+        <div style="background: #EFF6FF; border-left: 4px solid var(--primary-blue); padding: 12px 20px; border-radius: 0 8px 8px 0; text-align: left; max-width: 750px;">
+          <strong style="color: var(--navy);">Keterkaitan Matematika:</strong>
+          <p style="font-size: 0.9rem; color: #475569; margin-top: 4px;">Peredaran benda-benda langit pada lintasan bundar/elips menunjukkan pola geometris dan keteraturan presisi yang diciptakan oleh Allah SWT. Konsep lingkaran merupakan pondasi penting dalam memahami perhitungan orbit tersebut.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: APERSEPSI & UNSUR LINGKARAN INTERAKTIF -->
+    <div class="slide" id="slide-3">
+      <div class="slide-header"><h2>Apersepsi & Unsur Lingkaran</h2><span class="tag">Eksplorasi Interaktif</span></div>
+      <div class="split-grid">
+        <div class="geo-panel">
+          <svg id="element-circle" class="geo-svg" viewBox="0 0 340 300" role="img" aria-label="Lingkaran polos untuk eksplorasi unsur">
+            <circle cx="150" cy="145" r="105" fill="white" stroke="#64748B" stroke-width="3"/>
+            <g id="element-visual"></g>
+          </svg>
+          <p class="hint">Pilih salah satu unsur untuk melihat visualisasi pada lingkaran.</p>
+        </div>
+        <div class="element-menu-wrap">
+          <button id="element-intro" class="reveal-menu-btn" onclick="toggleElementMenu()">Mengingat Kembali Unsur Lingkaran <span>＋</span></button>
+          <p id="element-instruction" class="muted">Mulai dari lingkaran polos. Klik judul di atas untuk membuka menu unsur.</p>
+          <div id="element-menu" class="element-menu" hidden>
+            <button onclick="showElement('pusat',this)">Titik pusat</button>
+            <button onclick="showElement('jari',this)">Jari-jari</button>
+            <button onclick="showElement('diameter',this)">Diameter</button>
+            <button onclick="showElement('busur',this)">Busur</button>
+            <button onclick="showElement('tali',this)">Tali busur</button>
+            <button onclick="showElement('apotema',this)">Apotema</button>
+            <button onclick="showElement('tembereng',this)">Tembereng</button>
+            <button onclick="showElement('juring',this)">Juring</button>
+          </div>
+          <div id="element-definition" class="definition-card" aria-live="polite">Definisi akan muncul setelah salah satu unsur dipilih.</div>
+          <p class="source-note">Sumber definisi: Susanto, D., dkk. (2021). <em>Matematika untuk SMA/SMK Kelas XI</em>, Bab 2 “Lingkaran”; Tohir, M., dkk. (2022). <em>Matematika untuk SMA/SMK/MA Kelas XII</em>, Bab 2 “Busur dan Juring Lingkaran”. Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. <a href="https://repositori.kemendikdasmen.go.id/36512/1/Matematika-BS-KLS-XI.pdf" target="_blank" rel="noopener">Buku Matematika Kelas XI (PDF resmi)</a> · <a href="https://static-sc.cloudapp.web.id/content/pdf/bukuteks/kurikulum21/Matematika-BS-KLS-XII.pdf" target="_blank" rel="noopener">Buku Matematika Kelas XII (PDF)</a>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: 4 JENIS SUDUT LINGKARAN -->
+    <div class="slide" id="slide-4">
+      <div class="slide-header"><h2>Mengenal 4 Jenis Sudut Lingkaran</h2><span class="tag">Tekan Play untuk melihat prosesnya</span></div>
+      <p class="muted" style="margin-bottom:12px">Setiap gambar dimulai dari lingkaran polos. Pilih tombol Play untuk membangun satu sudut, atau tampilkan semua konstruksi sekaligus.</p>
+      <div style="display:flex;justify-content:flex-end;margin:0 0 12px;">
+        <button class="step-btn play-angle-btn" id="show-all-angles" onclick="animateAllAngles()" style="width:auto;min-width:220px">▶ Tampilkan seluruh animasi</button>
+      </div>
+      <div class="angle-grid">
+        <div class="angle-card">
+          <div class="angle-name static-angle-name">Sudut Pusat</div>
+          <svg class="angle-visual" viewBox="0 0 220 120" role="img" aria-label="Lingkaran polos untuk sudut pusat"><circle cx="110" cy="60" r="44" fill="none" stroke="#64748B" stroke-width="2.5"/></svg>
+          <button class="step-btn play-angle-btn" onclick="animateAngle(1,this)">▶ Play visualisasi</button>
+          <button class="step-btn definition-btn" onclick="toggleDefinition('angle-def-1',this)">Cek definisi</button><p id="angle-def-1" class="angle-definition" hidden>Titik sudutnya terletak di pusat lingkaran dan kedua sisinya berupa jari-jari. (Susanto dkk., 2021, Bab 2).</p>
+        </div>
+        <div class="angle-card">
+          <div class="angle-name static-angle-name">Sudut Keliling</div>
+          <svg class="angle-visual" viewBox="0 0 220 120" role="img" aria-label="Lingkaran polos untuk sudut keliling"><circle cx="110" cy="60" r="44" fill="none" stroke="#64748B" stroke-width="2.5"/></svg>
+          <button class="step-btn play-angle-btn" onclick="animateAngle(2,this)">▶ Play visualisasi</button>
+          <button class="step-btn definition-btn" onclick="toggleDefinition('angle-def-2',this)">Cek definisi</button><p id="angle-def-2" class="angle-definition" hidden>Titik sudutnya berada pada keliling lingkaran dan kedua sisinya merupakan tali busur. (Susanto dkk., 2021, Bab 2).</p>
+        </div>
+        <div class="angle-card">
+          <div class="angle-name static-angle-name">Sudut Dalam</div>
+          <svg class="angle-visual" viewBox="0 0 220 120" role="img" aria-label="Lingkaran polos untuk sudut dalam"><circle cx="110" cy="60" r="44" fill="none" stroke="#64748B" stroke-width="2.5"/></svg>
+          <button class="step-btn play-angle-btn" onclick="animateAngle(3,this)">▶ Play visualisasi</button>
+          <button class="step-btn definition-btn" onclick="toggleDefinition('angle-def-3',this)">Cek definisi</button><p id="angle-def-3" class="angle-definition" hidden>Sudut yang terbentuk ketika dua tali busur berpotongan di bagian dalam lingkaran. (Pengungkapan konsep berdasarkan teorema lingkaran pada Susanto dkk., 2021, Bab 2).</p>
+        </div>
+        <div class="angle-card">
+          <div class="angle-name static-angle-name">Sudut Luar</div>
+          <svg class="angle-visual outside-circle-base" viewBox="0 0 220 120" role="img" aria-label="Lingkaran polos untuk sudut luar"><circle cx="82" cy="60" r="44" fill="none" stroke="#64748B" stroke-width="2.5"/></svg>
+          <img class="angle-outside-img" style="display:none" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOoAAADrCAYAAABnyArrAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFxEAABcRAcom8z8AADPESURBVHhe7Z0JfBTl+ceRWluP1nqLAiE77zsJqHig1gNLa633LXiBkplJwuVZW0SsxnrUAxSy72wgHCbzziaQeKBA5p1N0Kio9UDrgQrZDZdC2JkN9yHn/D/P7MbSqfYPCkmA5/v57EfYfTOzIM887/scv6dDBwRBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARpM4ot6xejeOzQsrL6XwY/QxBkD+J53gFFRUUdq6urf9byKiqqP7Covv5A/9fV1Qc9WTHziOcqZoZKymO9dKOud7jcPjvMY9nFpvVrWFNfn14PP9dyjX7+dYo6wvWD90QQZBfRo69lsTLxe90Ut+jcGhI2rBGMiyeZIUp0LiqYYc1kXLyum/a7jIs5jNv/0rn9ETPFOzq365kpapgZi+rcjuiG/Q/G7fuZIQYXm+JGPRr73biqWScG74kgyA9QWjrn58x4+SjwhGFun1rMZ57HuH2DbsYe0k1h6NyuC5viPWaIzxkXjYyL5YyLtYyLrboptjFTbNZNsU7n9urM+5sj0Zinm7aX/r3dxAzRGObiM/86XMSYaZfpphhZbFp9wWhZtPaUMWWi27MT7SPBCwe/I4Ls1xQXW79gRp0cidZer0fF35kppmWM8Vudi207GNwGxoXLuLUwzO3PdG6/qxtWLTPtl/SoKGdcRJgpRjPTLtbNmKFH7ZcZt+oYF/9khvW5bogFYcNyGRebSipqPd1MX1c37W8Zt+fBdcKmeCjC7Wt1Xk+C3xNB9juYUXcUM8QlsBXVuTVRN2MzMlvXZYzbW5kpNjJTLGCmXaNz+1lmWveEDbtAj4rbGLduZqZ1nW5Yl4cNcVGJKS4oNq1zmCnO8L2xYZ1eYtaeA14SPg+b4gpYDz8X5vbtYW5pEVPc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" alt="Sudut luar lingkaran: dua garis secan bertemu di luar lingkaran" />
+          <button class="step-btn play-angle-btn" onclick="animateAngle(4,this)">▶ Play visualisasi</button>
+          <button class="step-btn definition-btn" onclick="toggleDefinition('angle-def-4',this)">Cek definisi</button><p id="angle-def-4" class="angle-definition" hidden>Sudut yang titik sudutnya berada di luar lingkaran dan dibentuk oleh dua garis secan, garis singgung, atau kombinasi keduanya. (Pengungkapan konsep berdasarkan teorema lingkaran pada Susanto dkk., 2021, Bab 2).</p>
+        </div>
+      </div>
+      <p class="source-note">Rujukan buku: Susanto, D., dkk. (2021). <em>Matematika untuk SMA/SMK Kelas XI</em>. Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi, Bab 2 “Lingkaran”. <a href="https://repositori.kemendikdasmen.go.id/36512/1/Matematika-BS-KLS-XI.pdf" target="_blank" rel="noopener">Buka buku resmi</a>.</p>
+    </div>
+
+    <div class="slide" id="slide-5">
+      <div class="slide-header">
+        <h2>Sudut Pusat & Sudut Keliling</h2>
+        <span class="tag">Materi & Pembuktian</span>
+      </div>
+      <div class="split-grid">
+        <div class="geo-panel">
+          <svg class="geo-svg" viewBox="-20 -20 340 310">
+            <circle cx="150" cy="150" r="110" fill="none" stroke="#0F172A" stroke-width="3"/>
+            <polygon id="tri-aoc-5" class="highlight-shape" points="150,150 50,195 150,40" />
+            
+            <line x1="150" y1="150" x2="50" y2="195" stroke="#0F172A" stroke-width="2.5"/>
+            <line x1="150" y1="150" x2="250" y2="195" stroke="#0F172A" stroke-width="2.5"/>
+            <line x1="50" y1="195" x2="150" y2="40" stroke="#0F172A" stroke-width="2.5"/>
+            <line x1="250" y1="195" x2="150" y2="40" stroke="#0F172A" stroke-width="2.5"/>
+            
+            <line id="line-diam-5" class="draw-line" x1="150" y1="40" x2="150" y2="260" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="6,4"/>
+
+            <circle cx="150" cy="150" r="5" fill="#2563EB"/><text x="160" y="160" font-weight="bold">O</text>
+            <circle cx="50" cy="195" r="5" fill="#0F172A"/><text x="25" y="205" font-weight="bold">A</text>
+            <circle cx="250" cy="195" r="5" fill="#0F172A"/><text x="260" y="205" font-weight="bold">B</text>
+            <circle cx="150" cy="40" r="5" fill="#EF4444"/><text x="145" y="25" font-weight="bold">C</text>
+          </svg>
+        </div>
+
+        <div class="proof-panel">
+          <div class="step-btn-group">
+            <button class="step-btn active" onclick="setProofStep5(0)">Langkah 0</button>
+            <button class="step-btn" onclick="setProofStep5(0.5)">Dasar</button>
+            <button class="step-btn" onclick="setProofStep5(1)">Langkah 1</button>
+            <button class="step-btn" onclick="setProofStep5(2)">Langkah 2</button>
+            <button class="step-btn" onclick="setProofStep5(3)">Kesimpulan</button>
+          </div>
+
+          <div class="proof-card active" id="pcard5-0"><strong>Langkah 0. Lingkaran kosong:</strong><p>Mulai dari lingkaran kosong tanpa titik, garis bantu, atau sudut yang ditandai.</p></div>
+            <div class="proof-card" id="pcard5-base"><strong>Bagian dasar yang dibutuhkan:</strong><p>Dasar: OA = OB = OC sebagai jari-jari; sudut pusat dan sudut keliling menghadap busur AB yang sama.</p></div>
+            <div class="proof-card" id="pcard5-1">
+            <strong>1. Garis Bantu Diameter CO:</strong>
+            <p>Membagi $\angle ACB$ menjadi $\alpha + \beta$. Karena $OA = OC = r$, maka $\Delta AOC$ sama kaki ($\angle OAC = \alpha$).</p>
+          </div>
+
+          <div class="proof-card" id="pcard5-2">
+            <strong>2. Sudut Luar Segitiga:</strong>
+            <p>Sudut luar $\Delta AOC$ pada titik $O$ bernilai $2\alpha$. Demikian juga pada $\Delta BOC$ bernilai $2\beta$.</p>
+          </div>
+
+          <div class="proof-card" id="pcard5-3">
+            <strong>3. Kesimpulan Rumus:</strong>
+            <p>Total Sudut Pusat = $2\alpha + 2\beta = 2(\alpha + \beta) = 2 \times \text{Sudut Keliling}$.</p>
+            <div style="margin-top: 4px;"><span class="math-formula">$\text{Sudut Pusat}=2\times\text{Sudut Keliling}$</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: SUDUT DALAM LINGKARAN (PEMBUKTIAN INTERAKTIF) -->
+    <div class="slide" id="slide-6">
+      <div class="slide-header">
+        <h2>Sudut Dalam Lingkaran</h2>
+        <span class="tag">Materi & Pembuktian</span>
+      </div>
+      <div class="split-grid">
+        <div class="geo-panel">
+          <svg class="geo-svg" viewBox="-20 -20 340 310">
+            <circle cx="150" cy="150" r="110" fill="none" stroke="#0F172A" stroke-width="3"/>
+            <polygon id="tri-ade-6" class="highlight-shape" points="72,72 150,150 72,228" />
+            
+            <!-- Dua tali busur AC dan DB berpotongan tepat di E -->
+            <line x1="72" y1="72" x2="228" y2="228" stroke="#0F172A" stroke-width="2.5"/>
+            <line x1="72" y1="228" x2="228" y2="72" stroke="#0F172A" stroke-width="2.5"/>
+            <!-- Busur AB (atas) dan CD (bawah), ditampilkan pada tahap hubungan busur -->
+            <path id="arc-ab-6" d="M 72 72 A 110 110 0 0 1 228 72" fill="none" stroke="#0EA5E9" stroke-width="5" stroke-linecap="round"/>
+            <path id="arc-cd-6" d="M 228 228 A 110 110 0 0 1 72 228" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/>
+            
+            <!-- Garis bantu tali busur AD; kedua ujung tepat pada keliling -->
+            <line id="line-ad-6" class="draw-line" x1="72" y1="72" x2="72" y2="228" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="6,4"/>
+
+            <circle cx="150" cy="150" r="5" fill="#2563EB"/><text x="157" y="143" font-weight="bold">E</text>
+            <circle cx="72" cy="72" r="5" fill="#0F172A"/><text x="50" y="66" font-weight="bold">A</text>
+            <circle cx="228" cy="72" r="5" fill="#0F172A"/><text x="237" y="66" font-weight="bold">B</text>
+            <circle cx="228" cy="228" r="5" fill="#0F172A"/><text x="237" y="239" font-weight="bold">C</text>
+            <circle cx="72" cy="228" r="5" fill="#0F172A"/><text x="50" y="239" font-weight="bold">D</text>
+          </svg>
+        </div>
+
+        <div class="proof-panel">
+          <div class="step-btn-group">
+            <button class="step-btn active" onclick="setProofStep6(0)">Langkah 0</button>
+            <button class="step-btn" onclick="setProofStep6(0.5)">Dasar</button>
+            <button class="step-btn" onclick="setProofStep6(1)">Langkah 1</button>
+            <button class="step-btn" onclick="setProofStep6(2)">Langkah 2</button>
+            <button class="step-btn" onclick="setProofStep6(3)">Kesimpulan</button>
+          </div>
+
+          <div class="proof-card active" id="pcard6-0"><strong>Langkah 0. Lingkaran kosong:</strong><p>Mulai dari lingkaran kosong tanpa tali busur dan tanpa titik perpotongan.</p></div>
+            <div class="proof-card" id="pcard6-base"><strong>Bagian dasar yang dibutuhkan:</strong><p>Dasar: dua tali busur berpotongan di E; sudut dalam berkaitan dengan dua busur yang dihadapinya.</p></div>
+            <div class="proof-card" id="pcard6-1">
+            <strong>1. Tarik Tali Busur AD:</strong>
+            <p>Membentuk segitiga $\Delta ADE$. Sudut dalam yang dicari adalah $\angle AED$.</p>
+          </div>
+
+          <div class="proof-card" id="pcard6-2">
+            <strong>2. Hubungan Sudut Keliling:</strong>
+            <p>$\angle ADE$ menghadap Busur AB ($\frac{1}{2}\text{Busur AB}$). $\angle DAE$ menghadap Busur CD ($\frac{1}{2}\text{Busur CD}$).</p>
+          </div>
+
+          <div class="proof-card" id="pcard6-3">
+            <strong>3. Sifat Sudut Luar Segitiga:</strong>
+            <p>$\angle AED = \angle ADE + \angle DAE = \frac{1}{2}(\text{Busur AB} + \text{Busur CD})$.</p>
+            <div style="margin-top: 4px;"><span class="math-formula">$\text{Sudut Dalam}=\frac{1}{2}(\text{Busur 1}+\text{Busur 2})$</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: SUDUT LUAR LINGKARAN (PEMBUKTIAN INTERAKTIF) -->
+    <div class="slide" id="slide-7">
+      <div class="slide-header">
+        <h2>Sudut Luar Lingkaran</h2>
+        <span class="tag">Materi & Pembuktian</span>
+      </div>
+      <div class="split-grid">
+        <div class="geo-panel">
+          <svg class="geo-svg" viewBox="-20 -20 340 310">
+            <circle cx="110" cy="150" r="85" fill="none" stroke="#0F172A" stroke-width="3"/>
+            
+            <line x1="280" y1="150" x2="30" y2="108" stroke="#0F172A" stroke-width="2.5"/> <!-- Secan atas: P-B-A -->
+            <line x1="280" y1="150" x2="30" y2="192" stroke="#0F172A" stroke-width="2.5"/> <!-- Secan bawah: P-D-C -->
+            
+            <!-- Garis bantu BC: dari titik dekat P pada keliling ke titik jauh pada keliling -->
+            <line id="line-bc-7" class="draw-line" x1="193" y1="129" x2="30" y2="192" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="6,4"/>
+
+            <circle cx="280" cy="150" r="5" fill="#EF4444"/><text x="290" y="155" font-weight="bold">P</text>
+            <circle cx="190" cy="136" r="5" fill="#0F172A"/><text x="196" y="126" font-weight="bold">B</text>
+            <circle cx="30" cy="108" r="5" fill="#0F172A"/><text x="14" y="99" font-weight="bold">A</text>
+            <circle cx="30" cy="192" r="5" fill="#0F172A"/><text x="14" y="210" font-weight="bold">C</text>
+            <circle cx="190" cy="164" r="5" fill="#0F172A"/><text x="196" y="180" font-weight="bold">D</text>
+          </svg>
+        </div>
+
+        <div class="proof-panel">
+          <div class="step-btn-group">
+            <button class="step-btn active" onclick="setProofStep7(0)">Langkah 0</button>
+            <button class="step-btn" onclick="setProofStep7(0.5)">Dasar</button>
+            <button class="step-btn" onclick="setProofStep7(1)">Langkah 1</button>
+            <button class="step-btn" onclick="setProofStep7(2)">Langkah 2</button>
+            <button class="step-btn" onclick="setProofStep7(3)">Kesimpulan</button>
+          </div>
+
+          <div class="proof-card active" id="pcard7-0"><strong>Langkah 0. Lingkaran kosong:</strong><p>Mulai dari lingkaran kosong sebelum dua garis sekan ditambahkan.</p></div>
+            <div class="proof-card" id="pcard7-base"><strong>Bagian dasar yang dibutuhkan:</strong><p>Dasar: dua garis sekan berpotongan di titik P di luar lingkaran; sudut luar terkait selisih dua busur.</p></div>
+            <div class="proof-card" id="pcard7-1">
+            <strong>1. Tarik Garis Bantu BC:</strong>
+            <p>Membentuk $\Delta PBC$. Sudut luar $\Delta PBC$ pada titik $B$ adalah $\angle ABC$.</p>
+          </div>
+
+          <div class="proof-card" id="pcard7-2">
+            <strong>2. Persamaan Sudut Luar:</strong>
+            <p>$\angle ABC = \angle P + \angle BCP \implies \angle P = \angle ABC - \angle BCP$.</p>
+          </div>
+
+          <div class="proof-card" id="pcard7-3">
+            <strong>3. Substitusi Sudut Keliling:</strong>
+            <p>$\angle P = \frac{1}{2}\text{Busur Besar AD} - \frac{1}{2}\text{Busur Kecil BC}$.</p>
+            <div style="margin-top: 4px;"><span class="math-formula">$\text{Sudut Luar}=\frac{1}{2}(\text{Busur Besar}-\text{Busur Kecil})$</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: CONTOH SOAL DENGAN VISUALISASI -->
+    <div class="slide" id="slide-8">
+      <div class="slide-header">
+        <h2>Contoh Soal & Pembahasan</h2>
+        <span class="tag">Amati gambar, ikuti langkahnya</span>
+      </div>
+      <div class="example-grid">
+        <section class="example-card">
+          <h4>Soal 1 — Sudut Pusat dan Sudut Keliling</h4>
+          <p>Diketahui sudut pusat AOB = 124°. Tentukan sudut keliling ACB yang menghadap busur AB yang sama.</p>
+          <div class="example-figure">
+            <svg class="example-svg" viewBox="0 0 300 220" role="img" aria-label="Lingkaran dengan sudut pusat AOB 124 derajat dan sudut keliling ACB yang menghadap busur yang sama">
+              <circle cx="150" cy="110" r="76" fill="white" stroke="#64748B" stroke-width="2.5"/>
+              <path d="M84 72 A76 76 0 0 1 216 72" fill="none" stroke="#0EA5E9" stroke-width="7" stroke-linecap="round"/>
+              <line x1="150" y1="110" x2="84" y2="72" stroke="#2563EB" stroke-width="2.8"/>
+              <line x1="150" y1="110" x2="216" y2="72" stroke="#2563EB" stroke-width="2.8"/>
+              <line x1="150" y1="186" x2="84" y2="72" stroke="#64748B" stroke-width="2.5"/>
+              <line x1="150" y1="186" x2="216" y2="72" stroke="#64748B" stroke-width="2.5"/>
+              <path d="M130 98 A24 24 0 0 1 170 98" fill="none" stroke="#EF4444" stroke-width="3"/>
+              <path d="M140 169 A18 18 0 0 1 160 169" fill="none" stroke="#EF4444" stroke-width="3"/>
+              <circle cx="150" cy="110" r="3.5" fill="#0F172A"/>
+              <text x="156" y="126" font-size="12" fill="#0F172A">O</text><text x="68" y="69" font-size="13">A</text><text x="221" y="69" font-size="13">B</text><text x="158" y="205" font-size="13">C</text>
+              <text x="126" y="87" font-size="13" fill="#DC2626" font-weight="700">124°</text><text x="163" y="174" font-size="13" fill="#DC2626" font-weight="700">x</text>
+            </svg>
+          </div>
+          <button class="step-btn example-next" onclick="advanceExample(this)">Mulai pembahasan bertahap ▶</button>
+          <div class="worked-steps" data-step="0">
+            <p data-workstep="1"><strong>Langkah 1.</strong> Sudut keliling menghadap busur yang sama dengan sudut pusat.</p>
+            <p data-workstep="2"><strong>Langkah 2.</strong> Sudut keliling = ½ × sudut pusat.</p>
+            <p data-workstep="3"><strong>Langkah 3.</strong> x = ½ × 124° = <strong class="answer-value">62°</strong>.</p>
+          </div>
+        </section>
+        <section class="example-card">
+          <h4>Soal 2 — Sudut Dalam Lingkaran</h4>
+          <p>Dua tali busur berpotongan di dalam lingkaran. Ukuran dua busur yang dihadapi adalah 86° dan 54°. Tentukan sudut x.</p>
+          <div class="example-figure">
+            <svg class="example-svg" viewBox="0 0 300 220" role="img" aria-label="Dua tali busur berpotongan di dalam lingkaran dengan busur 86 derajat dan 54 derajat">
+              <circle cx="150" cy="110" r="76" fill="white" stroke="#64748B" stroke-width="2.5"/>
+              <path d="M101 52 A76 76 0 0 1 199 52" fill="none" stroke="#0EA5E9" stroke-width="6" stroke-linecap="round"/>
+              <path d="M207 83 A76 76 0 0 1 207 137" fill="none" stroke="#F59E0B" stroke-width="6" stroke-linecap="round"/>
+              <line x1="91" y1="59" x2="211" y2="160" stroke="#2563EB" stroke-width="2.8"/>
+              <line x1="209" y1="59" x2="89" y2="160" stroke="#2563EB" stroke-width="2.8"/>
+              <path d="M145 105 A18 18 0 0 1 164 106" fill="none" stroke="#EF4444" stroke-width="3"/>
+              <circle cx="150" cy="110" r="3.5" fill="#EF4444"/>
+              <text x="136" y="92" font-size="13" fill="#DC2626" font-weight="700">x</text>
+              <text x="124" y="42" font-size="13" fill="#0369A1" font-weight="700">86°</text><text x="216" y="113" font-size="13" fill="#B45309" font-weight="700">54°</text>
+              <text x="77" y="53" font-size="12">A</text><text x="216" y="53" font-size="12">B</text><text x="215" y="176" font-size="12">C</text><text x="73" y="176" font-size="12">D</text>
+            </svg>
+          </div>
+          <button class="step-btn example-next" onclick="advanceExample(this)">Mulai pembahasan bertahap ▶</button>
+          <div class="worked-steps" data-step="0">
+            <p data-workstep="1"><strong>Langkah 1.</strong> Sudut dalam = ½ × (busur pertama + busur kedua).</p>
+            <p data-workstep="2"><strong>Langkah 2.</strong> x = ½ × (86° + 54°).</p>
+            <p data-workstep="3"><strong>Langkah 3.</strong> x = ½ × 140° = <strong class="answer-value">70°</strong>.</p>
+          </div>
+        </section>
+      </div>
+      <p class="source-note">Konsep sudut pusat, sudut keliling, dan sudut dalam diringkas dari Susanto, D., dkk. (2021), <em>Matematika untuk SMA/SMK Kelas XI</em>, Bab 2 “Lingkaran”.</p>
+    </div>
+
+    <!-- SLIDE 9: ATURAN PERMAINAN -->
+    <div class="slide" id="slide-9">
+      <div class="slide-header">
+        <h2>Aturan Permainan Tebak Gambar</h2>
+        <span class="tag">Aktivitas Kelompok</span>
+      </div>
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px; height: 100%;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; max-width: 850px;">
+          <div style="background: #EFF6FF; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #BFDBFE;">
+            <div style="font-size: 2rem; margin-bottom: 6px;">👥</div>
+            <h4 style="color: var(--navy);">Kelompok</h4>
+            <p style="font-size: 0.85rem; color: #475569; margin-top: 4px;">Siswa dibagi menjadi 2–4 kelompok diskusi.</p>
+          </div>
+          <div style="background: #ECFDF5; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #A7F3D0;">
+            <div style="font-size: 2rem; margin-bottom: 6px;">🎯</div>
+            <h4 style="color: #065F46;">Jawaban Benar</h4>
+            <p style="font-size: 0.85rem; color: #047857; margin-top: 4px;">Mendapatkan <strong>+10 Poin</strong> untuk jawaban tepat.</p>
+          </div>
+          <div style="background: #FEF2F2; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #FECACA;">
+            <div style="font-size: 2rem; margin-bottom: 6px;">💡</div>
+            <h4 style="color: #991B1B;">Bonus Langkah</h4>
+            <p style="font-size: 0.85rem; color: #B91C1C; margin-top: 4px;">Tambahan <strong>+5 Poin</strong> jika alasan/langkah penyelesaian benar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: TEBAK GAMBAR 1 -->
+    <div class="slide" id="slide-10">
+      <div class="slide-header">
+        <h2>Tebak Gambar 1</h2>
+        <span class="tag">Tantangan 1</span>
+      </div>
+      <div class="split-grid">
+        <div class="geo-panel">
+          <svg class="geo-svg" viewBox="-20 -20 340 310">
+            <circle cx="150" cy="150" r="100" fill="none" stroke="#0F172A" stroke-width="3"/>
+            <line x1="150" y1="150" x2="70" y2="210" stroke="#0F172A" stroke-width="2.5"/>
+            <line x1="150" y1="150" x2="230" y2="210" stroke="#0F172A" stroke-width="2.5"/>
+            <line x1="70" y1="210" x2="150" y2="50" stroke="#0F172A" stroke-width="2.5"/>
+            <line x1="230" y1="210" x2="150" y2="50" stroke="#0F172A" stroke-width="2.5"/>
+            <text x="135" y="140" fill="#EF4444" font-weight="bold" font-size="14">100°</text>
+            <text x="145" y="75" fill="#2563EB" font-weight="bold" font-size="16">x</text>
+          </svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <h3 style="color: var(--navy);">Pertanyaan:</h3>
+          <p style="font-size: 1rem;">Diketahui sudut pusat $= 100^\circ$. Tentukan nilai $x$ (sudut keliling) yang menghadap busur yang sama!</p>
+          <button class="step-btn" style="align-self: flex-start;" onclick="toggleAnswer('ans-10')">Buka / Tutup Kunci Jawaban</button>
+          <div class="answer-panel" id="ans-10">
+            Jawaban: $x = \frac{1}{2} \times 100^\circ = \mathbf{50^\circ}$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: TEBAK GAMBAR 2 -->
+    <div class="slide" id="slide-11">
+      <div class="slide-header"><h2>Tebak Gambar 2</h2><span class="tag">Tantangan 2</span></div>
+      <div class="quiz-visual-grid">
+        <div class="quiz-visual-card">
+          <h4 style="color:var(--primary-blue)">Tantangan A — Sudut Dalam</h4>
+          <svg class="quiz-svg" viewBox="0 0 300 220" role="img" aria-label="Dua tali busur berpotongan di dalam lingkaran, busur yang dihadapi 110 derajat dan 50 derajat">
+            <circle cx="145" cy="108" r="82" fill="white" stroke="#64748B" stroke-width="2.5"/>
+            <path d="M92 45 L207 172 M198 43 L83 172" fill="none" stroke="#2563EB" stroke-width="3"/>
+            <path d="M134 96 A18 18 0 0 1 157 96" fill="none" stroke="#EF4444" stroke-width="3"/>
+            <text x="150" y="86" style="font-size:14px;stroke:white">x</text>
+            <text x="74" y="39" style="font-size:12px">A</text><text x="207" y="37" style="font-size:12px">B</text>
+            <text x="207" y="188" style="font-size:12px">C</text><text x="66" y="188" style="font-size:12px">D</text>
+            <text x="40" y="109" style="font-size:13px;fill:#2563EB">110°</text><text x="207" y="110" style="font-size:13px;fill:#2563EB">50°</text>
+          </svg>
+          <p>Dua tali busur berpotongan di dalam lingkaran. Busur yang dihadapi bernilai 110° dan 50°. Tentukan sudut x.</p>
+          <button class="step-btn" onclick="toggleAnswer('ans-11a')">Lihat jawaban dan alasan</button>
+          <div class="answer-panel" id="ans-11a">x = ½ × (110° + 50°) = <strong>80°</strong>. Sudut dalam sama dengan setengah jumlah ukuran dua busur yang dihadapinya.</div>
+        </div>
+        <div class="quiz-visual-card">
+          <h4 style="color:var(--accent-red)">Tantangan B — Sudut Luar</h4>
+          <svg class="quiz-svg" viewBox="0 0 300 220" role="img" aria-label="Dua garis sekan berpotongan di luar lingkaran dengan busur besar 150 derajat dan busur kecil 70 derajat">
+            <circle cx="105" cy="110" r="72" fill="white" stroke="#64748B" stroke-width="2.5"/>
+            <path d="M270 52 L40 91 M270 52 L42 153" fill="none" stroke="#2563EB" stroke-width="3"/>
+            <path d="M238 48 A25 25 0 0 1 239 66" fill="none" stroke="#EF4444" stroke-width="3"/>
+            <circle cx="270" cy="52" r="4" fill="#EF4444"/><text x="252" y="38" style="font-size:13px">x</text>
+            <text x="36" y="81" style="font-size:12px">A</text><text x="33" y="169" style="font-size:12px">B</text>
+            <text x="105" y="27" style="font-size:13px;fill:#2563EB">150°</text><text x="103" y="199" style="font-size:13px;fill:#2563EB">70°</text>
+          </svg>
+          <p>Dua garis sekan berpotongan di luar lingkaran. Busur besar 150° dan busur kecil 70°. Tentukan sudut x.</p>
+          <button class="step-btn" onclick="toggleAnswer('ans-11b')">Lihat jawaban dan alasan</button>
+          <div class="answer-panel" id="ans-11b">x = ½ × (150° − 70°) = <strong>40°</strong>. Sudut luar sama dengan setengah selisih ukuran busur besar dan busur kecil.</div>
+        </div>
+      </div>
+      <p class="source-note">Konsep dan teorema lingkaran dirujuk dari Susanto, D., dkk. (2021), <em>Matematika untuk SMA/SMK Kelas XI</em>, Bab 2 “Lingkaran”. <a href="https://repositori.kemendikdasmen.go.id/36512/1/Matematika-BS-KLS-XI.pdf" target="_blank" rel="noopener">Buka buku resmi</a>.</p>
+    </div>
+
+    <!-- SLIDE 12: LATIHAN MANDIRI -->
+    <div class="slide" id="slide-12">
+      <div class="slide-header">
+        <h2>Latihan Mandiri</h2>
+        <span class="tag">Evaluasi Mandiri</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #F8FAFC; padding: 10px 14px; border-radius: 8px;">
+          <strong>Soal 1:</strong> Sudut pusat $= 96^\circ$. Tentukan sudut keliling pada busur yang sama!
+        </div>
+        <div style="background: #F8FAFC; padding: 10px 14px; border-radius: 8px;">
+          <strong>Soal 2:</strong> Sudut dalam menghadap dua busur bernilai $72^\circ$ dan $48^\circ$. Tentukan besar sudut dalam!
+        </div>
+        <div style="background: #F8FAFC; padding: 10px 14px; border-radius: 8px;">
+          <strong>Soal 3:</strong> Sudut luar dibentuk oleh dua busur $130^\circ$ dan $50^\circ$. Tentukan besar sudut luar!
+        </div>
+        <button class="step-btn" style="align-self: flex-start; margin-top: 4px;" onclick="toggleAnswer('ans-12')">Tampilkan Kunci Jawaban</button>
+        <div class="answer-panel" id="ans-12">
+          1. $48^\circ$ &nbsp;|&nbsp; 2. $60^\circ$ &nbsp;|&nbsp; 3. $40^\circ$
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: PENUGASAN & REALTIME SPREADSHEET -->
+    <div class="slide" id="slide-13">
+      <div class="slide-header">
+        <h2>Penugasan Mandiri & Rekap Real-Time</h2>
+        <span class="tag">Pengumpulan Tugas</span>
+      </div>
+      <div class="task-container">
+        <!-- Top Bar with Link Barcode Google Drive -->
+        <div class="top-task-bar">
+          <div class="qr-box">
+            <!-- Menampilkan QR Code dari link Drive yang diberikan -->
+            <a href="https://drive.google.com/file/d/14yOOwxX6g8I4_SZI7IhcTl8b8_WJcToV/view?usp=sharing" target="_blank" title="Klik untuk membuka Barcode">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://drive.google.com/file/d/14yOOwxX6g8I4_SZI7IhcTl8b8_WJcToV/view?usp=sharing" alt="QR Code Penugasan">
+            </a>
+          </div>
+          <div class="task-desc">
+            <h3>Pindai Barcode / Akses Tugas</h3>
+            <p>Pindai (scan) QR Code di samping atau klik gambar barcode untuk membuka tautan penugasan. Hasil pengumpulan tugas dan presensi siswa akan secara otomatis diperbarui pada tabel Google Sheets di bawah secara <strong>real-time</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Embedded Google Sheet Real-time -->
+        <div class="sheet-wrapper">
+          <iframe src="https://docs.google.com/spreadsheets/d/1xMvcHTcdKZGza81EtYKMm7MPTdgnZKQGqZFMJW3rFYk/edit?resourcekey=&gid=1694095244#gid=1694095244"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: KESIMPULAN & REFLEKSI -->
+    <div class="slide" id="slide-14">
+      <div class="slide-header">
+        <h2>Kesimpulan & Penutup</h2>
+        <span class="tag">Refleksi Pembelajaran</span>
+      </div>
+      <div class="split-grid">
+        <div style="background: #EFF6FF; padding: 16px; border-radius: 10px; border-left: 4px solid var(--primary-blue);">
+          <h4 style="color: var(--navy); margin-bottom: 8px;">Rangkuman Rumus:</h4>
+          <ul style="line-height: 1.8; font-size: 0.88rem;">
+            <li>$\text{Sudut Pusat} = 2 \times \text{Sudut Keliling}$</li>
+            <li>$\text{Sudut Dalam} = \frac{1}{2}(\text{Busur 1} + \text{Busur 2})$</li>
+            <li>$\text{Sudut Luar} = \frac{1}{2}(\text{Busur Besar} - \text{Busur Kecil})$</li>
+          </ul>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center; text-align: center;">
+          <p style="font-weight: 700; color: var(--navy); font-size: 1.1rem; margin-bottom: 8px;">"Teruslah bertanya, mencoba, dan menemukan pola!"</p>
+          <p style="color: #64748B; font-size: 0.9rem; margin-bottom: 16px;">Wassalamu’alaikum warahmatullahi wabarakatuh</p>
+          <div style="font-size: 0.85rem; color: var(--primary-blue); font-weight: 600;">Guru Praktikan: Yoga Pratama</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECK FOOTER NAVIGATION -->
+    <div class="deck-footer">
+      <div>Media Pembelajaran Matematika | <strong>Yoga Pratama</strong></div>
+      <div id="slide-num">Slide 1 / 14</div>
+      <div class="nav-btns">
+        <button id="fullscreen-btn" class="nav-btn" onclick="toggleFullscreen()">⛶ Layar Penuh</button>
+        <button id="prev-btn" class="nav-btn" onclick="changeSlide(-1)" aria-label="Slide sebelumnya">&lt;</button>
+        <button id="next-btn" class="nav-btn" onclick="changeSlide(1)" aria-label="Slide berikutnya">&gt;</button>
+      </div>
+    </div>
+
+  </div>
+
+  <canvas id="drawing-layer" aria-label="Lapisan coretan"></canvas>
+  <div class="draw-toolbar" aria-label="Alat coretan">
+    <button class="draw-tool" id="pen-tool" title="Pena" aria-label="Pena">✎</button>
+    <button class="draw-tool" id="eraser-tool" title="Penghapus" aria-label="Penghapus">⌫</button>
+    <button class="draw-tool" id="clear-tool" title="Hapus semua coretan" aria-label="Hapus semua coretan">✕</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

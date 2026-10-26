@@ -1,0 +1,388 @@
+/* Gaya visual media pembelajaran lingkaran */
+:root {
+      --navy: #0F172A;
+      --navy-header: #1E293B;
+      --primary-blue: #2563EB;
+      --accent-red: #EF4444;
+      --bg-light: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #334155;
+      --border-color: #E2E8F0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #020617;
+      color: var(--text-main);
+      display: flex;
+      justify-content: stretch;
+      align-items: stretch;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Presentation Container (16:9 Aspect Ratio) */
+    .deck-container {
+      width: 100vw;
+      max-width: none;
+      min-height: 100vh;
+      height: auto;
+      aspect-ratio: auto;
+      background: var(--bg-light);
+      border-radius: 0;
+      box-shadow: none;
+      position: relative;
+      overflow: visible;
+      display: block;
+    }
+
+    /* Slides Management */
+    .slide {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding: clamp(18px, 3vh, 32px) clamp(20px, 4vw, 56px) 54px;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      background: white;
+      overflow-y: auto;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+    .slide.active { animation: fadeIn 0.4s ease-in-out; }
+    /* Animasi bertahap untuk pengenalan empat jenis sudut */
+    #slide-4 .angle-card { opacity: 0; transform: translateY(18px) scale(.97); animation: angleReveal .65s ease-out forwards; }
+    #slide-4 .angle-card:nth-child(1) { animation-delay: .15s; }
+    #slide-4 .angle-card:nth-child(2) { animation-delay: .55s; }
+    #slide-4 .angle-card:nth-child(3) { animation-delay: .95s; }
+    #slide-4 .angle-card:nth-child(4) { animation-delay: 1.35s; }
+    @keyframes angleReveal { to { opacity: 1; transform: translateY(0) scale(1); } }
+    .draw-toolbar { position: fixed; left: 12px; top: 50%; transform: translateY(-50%); z-index: 10000; display:flex; flex-direction:column; gap:9px; padding:9px; border-radius:16px; background:rgba(15,23,42,.94); box-shadow:0 8px 24px rgba(0,0,0,.24); }
+    .draw-tool { width:44px; height:44px; border:1px solid rgba(255,255,255,.3); border-radius:11px; background:#fff; color:#0F172A; font-size:22px; cursor:pointer; display:grid; place-items:center; }
+    .draw-tool.active { background:#BFDBFE; outline:2px solid #60A5FA; }
+    #drawing-layer { position:fixed; inset:0; width:100vw; height:100vh; z-index:9998; pointer-events:none; touch-action:none; }
+    #drawing-layer.enabled { pointer-events:auto; cursor:crosshair; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header Bar */
+    .slide-header {
+      background: var(--navy-header);
+      color: white;
+      margin: calc(-1 * clamp(18px, 3vh, 32px)) calc(-1 * clamp(20px, 4vw, 56px)) 18px;
+      padding: 12px clamp(20px, 4vw, 56px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 4px solid var(--primary-blue);
+    }
+    .slide-header h2 { font-size: 1.25rem; font-weight: 700; color: #F8FAFC; }
+    .slide-header .tag { background: var(--primary-blue); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+
+    /* Layout Split */
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; height: 100%; align-items: center; }
+
+    /* Interactive Geometry Panel */
+    .geo-panel {
+      background: #F1F5F9;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .geo-svg { width: 100%; max-height: min(42vh, 420px); overflow: visible; }
+    svg text { fill: #0F172A; font-family: Arial, sans-serif; font-size: 13px; paint-order: stroke; stroke: #FFFFFF; stroke-width: 2px; stroke-linejoin: round; }
+    #slide-4 .angle-card svg { flex: 0 0 auto; display: block; max-width: 100%; overflow: visible; }
+    #slide-4 .angle-card p { color: #334155; line-height: 1.35; }
+
+    /* SVG Animated Lines & Accents */
+    .draw-line {
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+      transition: stroke-dashoffset 0.8s ease-in-out, opacity 0.4s;
+      opacity: 0;
+    }
+    .draw-line.active { stroke-dashoffset: 0; opacity: 1; }
+    
+    .highlight-shape {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      fill: rgba(37, 99, 235, 0.12);
+    }
+    .highlight-shape.active { opacity: 1; }
+
+    /* Proof Steps Panel */
+    .proof-panel { display: flex; flex-direction: column; gap: 8px; }
+    .step-btn-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+    .step-btn {
+      background: white;
+      border: 2px solid var(--primary-blue);
+      color: var(--primary-blue);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .step-btn.active, .step-btn:hover {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .proof-card {
+      background: #F8FAFC;
+      border-left: 4px solid #CBD5E1;
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.85rem;
+      opacity: 0.4;
+      transition: all 0.4s;
+    }
+    .proof-card.future {
+      opacity: 0 !important;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .proof-card.active {
+      background: #EFF6FF;
+      border-left-color: var(--primary-blue);
+      opacity: 1;
+      transform: translateX(4px);
+    }
+    .proof-card strong { color: var(--navy); }
+
+    /* Math Formulas & Accents */
+    .math-formula {
+      font-family: 'JetBrains Mono', monospace;
+      background: #FEF2F2;
+      color: var(--accent-red);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      border: 1px dashed var(--accent-red);
+      display: inline-block;
+    }
+
+    /* Penugasan / Realtime Spreadsheet Slide */
+    .task-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      height: 100%;
+    }
+    .top-task-bar {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: #EFF6FF;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid #BFDBFE;
+    }
+    .qr-box {
+      width: 100px;
+      height: 100px;
+      background: white;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid #93C5FD;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+    .task-desc { flex-grow: 1; }
+    .task-desc h3 { color: var(--navy); font-size: 1rem; margin-bottom: 4px; }
+    .task-desc p { font-size: 0.82rem; color: #475569; }
+
+    .sheet-wrapper {
+      flex-grow: 1;
+      width: 100%;
+      min-height: 250px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid var(--primary-blue);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .sheet-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Deck Footer & Navigation */
+    .deck-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 32px;
+      background: #0B1224;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.78rem;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .nav-btns { display: contents; }
+    .nav-btn {
+      appearance: none;
+      background: #FFFFFF !important;
+      color: #0B1224 !important;
+      border: 2px solid #FFFFFF;
+      padding: 8px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 1.15rem;
+      line-height: 1;
+      box-shadow: 0 3px 12px rgba(0,0,0,.28);
+      min-width: 42px;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
+    .nav-btn:hover { background: #DBEAFE !important; }
+    /* Navigasi utama menggunakan scroll vertikal per slide; fullscreen tetap tersedia. */
+    #prev-btn, #next-btn { display: none !important; }
+    #fullscreen-btn { position: fixed !important; right: 18px !important; bottom: 38px !important; z-index: 2147483647 !important; font-size: .8rem; }
+    .example-grid {display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch;}
+    .example-card {background:#F8FAFC;border:1px solid #DCE5F0;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;}
+    .example-card h4 {color:var(--navy);font-size:1.02rem;margin:0;}
+    .example-card > p {font-size:.88rem;line-height:1.45;margin:0;}
+    .example-figure {background:#fff;border:1px solid #E2E8F0;border-radius:10px;display:flex;justify-content:center;align-items:center;padding:6px;}
+    .example-figure svg {width:100%;max-height:220px;}
+    .worked-steps {background:#EFF6FF;border-left:4px solid var(--primary-blue);border-radius:0 8px 8px 0;padding:10px 12px;display:flex;flex-direction:column;gap:6px;}
+    .worked-steps p {font-size:.84rem;line-height:1.4;margin:0;}
+    .answer-value {color:#047857;font-size:1rem;}
+    @media (max-width: 760px) { .example-grid {grid-template-columns:1fr;} }
+
+    @media (max-width: 760px) {
+      #prev-btn { left: 6px !important; }
+      #next-btn, #fullscreen-btn { right: 6px !important; }
+      .nav-btn { padding: 8px 10px; font-size: 1rem; }
+    }
+
+    /* Interactive Game Cards */
+    .answer-panel {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background: #ECFDF5;
+      border: 1px stroke #10B981;
+      border-radius: 8px;
+      color: #065F46;
+      font-weight: bold;
+    }
+    .answer-panel.show { display: block; animation: fadeIn 0.3s; }
+    @media (max-width: 760px) {
+      .split-grid { grid-template-columns: 1fr; gap: 12px; }
+      .slide-header h2 { font-size: 1rem; }
+      .deck-footer { padding: 0 8px; font-size: .68rem; }
+      .nav-btn { padding: 4px 7px; }
+    }
+
+    /* Perbaikan navigasi dan interaksi bertahap */
+    body { height:100vh; min-height:0; overflow:hidden; }
+    .deck-container { height:100vh; min-height:0; overflow-y:auto; overflow-x:hidden; scroll-behavior:smooth; scroll-snap-type:y mandatory; overscroll-behavior-y:contain; }
+    .slide { flex:0 0 100vh; height:100vh; min-height:100vh; overflow-y:auto; scroll-margin:0; scroll-snap-align:start; scroll-snap-stop:always; scrollbar-width:thin; }
+    .slide.active { animation:fadeIn .28s ease-out; }
+    #prev-btn,#next-btn { display:inline-flex !important; align-items:center; justify-content:center; position:fixed; bottom:40px; z-index:2147483646; }
+    #prev-btn { left:18px; } #next-btn { right:18px; }
+    #fullscreen-btn { right:74px !important; bottom:40px !important; }
+    .deck-footer { pointer-events:none; } .deck-footer button { pointer-events:auto; }
+    .element-menu-wrap {display:flex;flex-direction:column;gap:12px;min-width:0}
+    .reveal-menu-btn {display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;border:0;border-radius:12px;background:#1E293B;color:white;padding:16px 18px;font:700 1rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;box-shadow:0 5px 16px #0f172a18}
+    .reveal-menu-btn span {font-size:1.5rem;color:#93C5FD}
+    .muted,.hint {font-size:.88rem;color:#64748B;line-height:1.5}
+    .hint {margin-top:10px;text-align:center}
+    .element-menu {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .element-menu button {border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;border-radius:9px;padding:10px 8px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s}
+    .element-menu button:hover,.element-menu button.selected {background:#2563EB;color:white;transform:translateY(-1px)}
+    .definition-card {background:#F8FAFC;border-left:4px solid #2563EB;border-radius:0 10px 10px 0;padding:13px 15px;line-height:1.55;min-height:70px;transition:opacity .25s}
+    .source-note {font-size:.72rem;line-height:1.45;color:#64748B;margin-top:10px}
+    #slide-4 .angle-card {gap:10px;}
+    #slide-4 .angle-name {width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #BFDBFE;border-radius:10px;background:#EFF6FF;color:#1D4ED8;padding:13px 15px;font:700 1rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:background .2s,color .2s,transform .2s;}
+    #slide-4 .angle-name:hover {transform:translateY(-2px);background:#DBEAFE;}
+    #slide-4 .angle-name span {font-size:.85rem;transition:transform .25s;}
+    #slide-4 .angle-card.selected .angle-name {background:#1D4ED8;color:white;border-color:#1D4ED8;}
+    #slide-4 .angle-card.selected .angle-name span {transform:rotate(90deg);}
+    #slide-4 .angle-visual {display:none;width:100%;height:clamp(105px,16vh,150px);overflow:visible;}
+    #slide-4 .angle-card.selected .angle-visual {display:block;}
+    #slide-4 .angle-card .step-btn,#slide-4 .angle-card .angle-definition {display:none;}
+    #slide-4 .angle-card.selected .step-btn {display:inline-flex;}
+    #slide-4 .angle-card.selected .angle-definition:not([hidden]) {display:block;}
+    #slide-4 .angle-visual .drawn {stroke-dasharray:var(--path-length,1);stroke-dashoffset:var(--path-length,1);opacity:.18;}
+    #slide-4 .angle-visual .drawn.draw-in {animation:drawAngle .75s ease-out forwards;}
+    #slide-4 .angle-visual text {opacity:0;animation:labelAngle .35s ease-out forwards;animation-delay:1.6s;}
+    @keyframes drawAngle {to {stroke-dashoffset:0;opacity:1;}}
+    @keyframes labelAngle {to {opacity:1;}}
+    .angle-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;flex:1}
+    #slide-4 .angle-card {opacity:1;transform:none;animation:none;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:7px;min-height:0}
+    .angle-card h4 {color:#2563EB;font-size:1.05rem}
+    .angle-card svg {width:100%;height:clamp(80px,13vh,125px)}
+    .angle-outside-img {width:min(100%,220px);height:clamp(80px,13vh,125px);object-fit:contain;opacity:0;clip-path:inset(0 100% 0 0);}
+    #slide-4 .angle-card.selected .angle-outside-img {display:block;}
+    .angle-definition {font-size:.82rem;line-height:1.45;text-align:left;background:#EFF6FF;border-radius:8px;padding:10px;color:#334155}
+    .quiz-visual-grid {display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1}
+    .quiz-visual-card {background:#F8FAFC;border:1px solid #E2E8F0;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+    .quiz-svg {width:100%;max-height:34vh;min-height:170px}
+    .quiz-visual-card p {font-size:.9rem;line-height:1.5}
+    .answer-panel {border:1px solid #A7F3D0}
+    @media(max-width:760px) {
+      body {overflow:hidden}
+      .deck-container {height:100dvh}
+      .slide {height:100dvh;min-height:100dvh;padding-bottom:68px}
+      .angle-grid,.quiz-visual-grid {grid-template-columns:1fr}
+      .angle-card {min-height:210px!important}
+      .quiz-svg {max-height:240px}
+      .element-menu {grid-template-columns:repeat(2,minmax(0,1fr))}
+      #prev-btn {left:8px!important} #next-btn {right:8px!important}
+      #fullscreen-btn {right:62px!important}
+      .deck-footer {height:30px}
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .deck-container {scroll-behavior:auto}
+      *,*::before,*::after {animation-duration:.01ms!important;transition-duration:.01ms!important}
+    }
+\n  
+    /* Slide 4: mulai dari lingkaran polos; visualisasi hanya berjalan setelah tombol Play */
+    #slide-4 .angle-card {opacity:1;transform:none;animation:none;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;min-height:0}
+    #slide-4 .static-angle-name {display:block;width:100%;font-weight:800;color:#1D4ED8;text-align:center;padding:5px 0;background:transparent;border:0}
+    #slide-4 .angle-visual {display:block;width:100%;height:clamp(115px,17vh,155px);overflow:visible}
+    #slide-4 .angle-card .step-btn {display:inline-flex;align-items:center;justify-content:center;width:100%;margin:0}
+    #slide-4 .play-angle-btn {background:#2563EB;color:#fff;border:0;border-radius:8px;padding:9px 12px;font-weight:700;cursor:pointer}
+    #slide-4 .definition-btn {background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}
+    #slide-4 .angle-definition:not([hidden]) {display:block}
+    #slide-4 .angle-outside-img {width:100%;height:clamp(115px,17vh,155px);object-fit:contain;display:none;opacity:1;clip-path:none}
+    #slide-4 .angle-card.outside-playing .outside-circle-base {display:none}
+
+
+    /* Contoh soal: pembahasan dibuka satu tahap setiap klik, visual tetap kumulatif */
+    .worked-steps p[data-workstep] {opacity:.12;filter:grayscale(.4);transition:opacity .3s,filter .3s,transform .3s}
+    .worked-steps p[data-workstep].revealed {opacity:1;filter:none;transform:translateX(3px)}
+    .example-next {align-self:flex-start;margin-top:3px}
+    .example-svg > * {opacity:0;transition:opacity .35s ease}
+    .example-svg > *:first-child {opacity:1}
+    #slide-10 .geo-panel svg > *, #slide-11 .quiz-svg > * {transform-box:fill-box;transform-origin:center;animation:quizDraw .65s ease-out both}
+    #slide-10 .geo-panel svg > *:nth-child(1), #slide-11 .quiz-svg > *:nth-child(1) {animation-delay:.05s}
+    #slide-10 .geo-panel svg > *:nth-child(2), #slide-11 .quiz-svg > *:nth-child(2) {animation-delay:.2s}
+    #slide-10 .geo-panel svg > *:nth-child(3), #slide-11 .quiz-svg > *:nth-child(3) {animation-delay:.35s}
+    #slide-10 .geo-panel svg > *:nth-child(n+4), #slide-11 .quiz-svg > *:nth-child(n+4) {animation-delay:.5s}
+    @keyframes quizDraw {from{opacity:.12;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
